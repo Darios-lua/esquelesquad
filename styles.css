@@ -201,4 +201,41 @@ body::before {
 @keyframes blink {
     0%, 100% { opacity: 1; }
     50% { opacity: 0; }
+}
+
+.terminal-input-line {
+    display: flex;
+    align-items: center;
+    margin-top: 1rem;
+}
+
+.terminal-input {
+    background: transparent;
+    border: none;
+    color: var(--terminal-green);
+    font-family: 'Courier New', monospace;
+    font-size: 1rem;
+    margin-left: 0.5rem;
+    padding: 0;
+    width: calc(100% - 200px);
+    caret-color: var(--terminal-green);
+}
+
+.terminal-input:focus {
+    outline: none;
+}
+
+.command-history {
+    color: var(--terminal-green);
+    margin: 0.5rem 0;
+}
+
+.error-message {
+    color: var(--main-color);
+    margin: 0.5rem 0;
+}
+
+.success-message {
+    color: var(--terminal-green);
+    margin: 0.5rem 0;
 } 
