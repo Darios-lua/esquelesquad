@@ -1,30 +1,78 @@
 :root {
     --main-color: #ff0000;
     --shadow-color: rgba(255, 0, 0, 0.7);
+    --terminal-green: #00ff00;
+    --terminal-bg: rgba(0, 0, 0, 0.9);
 }
+
+@import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
 
 body {
     margin: 0;
     padding: 0;
     background-color: #000;
     color: var(--main-color);
-    font-family: 'Courier New', monospace;
+    font-family: 'VT323', monospace;
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
     overflow: hidden;
+    position: relative;
+}
+
+body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(rgba(0,0,0,0.9), rgba(0,0,0,0.7)),
+                repeating-linear-gradient(
+                    0deg,
+                    transparent 0,
+                    transparent 1px,
+                    rgba(255, 0, 0, 0.1) 1px,
+                    rgba(255, 0, 0, 0.1) 2px
+                );
+    pointer-events: none;
+    animation: scanline 10s linear infinite;
 }
 
 .container {
     text-align: center;
+    position: relative;
+    padding: 2rem;
+    background: var(--terminal-bg);
+    border: 2px solid var(--main-color);
+    box-shadow: 0 0 20px var(--shadow-color);
 }
 
 .ascii-art {
-    font-size: 12px;
-    line-height: 1.2;
+    font-size: 10px;
+    line-height: 1;
     margin-bottom: 2rem;
     text-shadow: 0 0 5px var(--shadow-color);
+    animation: flicker 0.5s infinite alternate;
+}
+
+.binary-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    opacity: 0.1;
+    background: repeating-linear-gradient(
+        0deg,
+        transparent 0,
+        transparent 30px,
+        rgba(255, 0, 0, 0.1) 30px,
+        rgba(255, 0, 0, 0.1) 60px
+    );
+    animation: scroll 20s linear infinite;
 }
 
 .glitch-text h1 {
@@ -37,48 +85,58 @@ body {
                  0 0.05em 0 var(--shadow-color),
                  0 -0.05em 0 var(--shadow-color);
     animation: glitch 2s infinite;
+    letter-spacing: 0.2em;
 }
 
-.glitch-text h1::before,
-.glitch-text h1::after {
-    content: attr(data-text);
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-}
-
-.glitch-text h1::before {
-    animation: glitch-effect 3s infinite;
-    clip-path: polygon(0 0, 100% 0, 100% 35%, 0 35%);
-    transform: translate(-0.04em, -0.03em);
-    opacity: 0.75;
-}
-
-.glitch-text h1::after {
-    animation: glitch-effect 2s infinite;
-    clip-path: polygon(0 65%, 100% 65%, 100% 100%, 0 100%);
-    transform: translate(0.04em, 0.03em);
-    opacity: 0.75;
-}
-
-.terminal-line {
+.terminal-section {
     margin-top: 2rem;
-    font-size: 1.2rem;
+    text-align: left;
+    background: rgba(0, 0, 0, 0.8);
+    padding: 1rem;
+    border: 1px solid var(--main-color);
+    font-family: 'Courier New', monospace;
 }
 
-.prompt {
-    color: var(--main-color);
+.terminal-output {
+    color: var(--terminal-green);
+    margin: 1rem 0;
 }
 
-.cursor {
-    animation: blink 1s step-end infinite;
+.file {
+    padding-left: 1rem;
+    margin: 0.5rem 0;
+    opacity: 0;
+    animation: fadeIn 0.5s forwards;
 }
 
-@keyframes blink {
+.file:nth-child(1) { animation-delay: 0.5s; }
+.file:nth-child(2) { animation-delay: 1s; }
+.file:nth-child(3) { animation-delay: 1.5s; }
+.file:nth-child(4) { animation-delay: 2s; }
+
+.command {
+    color: var(--terminal-green);
+    margin-left: 0.5rem;
+}
+
+@keyframes scanline {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(100vh); }
+}
+
+@keyframes scroll {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(-100%); }
+}
+
+@keyframes flicker {
     0%, 100% { opacity: 1; }
-    50% { opacity: 0; }
+    50% { opacity: 0.8; }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateX(-20px); }
+    to { opacity: 1; transform: translateX(0); }
 }
 
 @keyframes glitch-effect {
@@ -127,4 +185,20 @@ body {
         text-shadow: 0.025em 0.05em 0 var(--shadow-color),
                      0.05em 0 0 var(--shadow-color);
     }
+}
+
+.directory {
+    color: var(--main-color);
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+}
+
+.cursor {
+    animation: blink 1s step-end infinite;
+    color: var(--main-color);
+}
+
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
 } 
